@@ -25,4 +25,7 @@ class CfScript:
         self.stack = stack
         self.bucket_name = '{}-cloudformation-scripts'.format(env)
         self.output_folder = './output/' # local output folder
-        self.common_files_folder = './common_cloudformation/' 
+        self.common_files_folder = './common_cloudformation/'
+
+        with open('properties/env.yml', 'r') as stream:
+            
