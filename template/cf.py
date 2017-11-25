@@ -2,6 +2,9 @@
 import argparse
 import yaml
 from jinja2 import Environment
+import boto3
+import os
+from subprocess import call
 
 __Author__ = 'Yufei Ren'
 __Date__ = '2017.11.26'
@@ -63,6 +66,41 @@ class CfScript:
             print('[' + self.stack + '] generate cloudformation file failed.')
             raise Exception('Stack ' + self.stack + ' generate cloudformation file failed.')
 
+    def upload(self):
+        '''
+        upload local cloudformation file to s3
+        '''
+        boto3.resource('s3').Object(self.bucket_name, self.stack_cf_file).upload_file(self.output_folder + self.stack_cf_file)
+        print('[' + self.stack + '] upload to \nhttps://s3.amazonaws.com/' + self.bucket_name + '/' + self.stack_cf_file)
+
+        for file in os.listdir(self.common_files_folder):
+            if file.startswith('common_'):
+                boto3.resource('s3').Object(self.bucket_name, file).upload_file(self.common_files_folder + file)
+                print('https://s3.amazonaws.com/' + self.bucket_name + '/' + file)
+
+    def deploy(self):
+        '''
+        deploy cloudformation script
+        eg: aws cloudformation deploy --stack-name devkiwi --template-file output/kiwi.yaml --parameters-overrides RootVolSize=17
+        '''
+        command = ['aws', 'cloudformation', 'deploy',
+                    '--stack-name', self.env + self.stack,
+                    '--capabilities', 'CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM',
+                    '--template-file', self.output_folder + self.stack_cf_file,
+                    '--parameter-overrides',
+                    'Env=' + self.env]
+        print('[' + self.stack + '] parameters: ')
+        print('[' + self.stack + '] Env -> ' + self.env)
+
+        if 'Parameters' in self.config:
+            for key, value in self.config['Parameters'].items():
+                command.append(key + '=' + str(value))
+                print('[' + self.stack + '] key -> ' + str(value))
+
+        print('[' + self.stack + '] ' + ' '.join(map(str, command))
+        call(command)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = 'The command build aws resources via CloudFormation')
     subparsers = parser.add_subparsers(dest = 'sub_command')
@@ -72,8 +110,27 @@ if __name__ == '__main__':
     parser_build.add_argument('env', help = 'environment')
     parser_build.add_argument('stack', help = 'cloudformation stack name')
 
+    # stage
+    parser_stage = subparsers.add_parser('stage', help = 'generat stack cf file and upload to s3')
+    parser_stage.add_argument('env', help = 'environment')
+    parser_stage.add_argument('stack', help = 'cloudformation stack name')
+
+    # deploy
+    parser_deploy = subparsers.add_parser('deploy', help = 'generat stack cf file and upload to s3, deploy cf stack')
+    parser_deploy.add_argument('env', help = 'environment')
+    parser_deploy.add_argument('stack', help = 'cloudformation stack name')
+
     args = parser.parse_args()
 
     if args.sub_command == 'build':
         cf_script = CfScript(args.env, args.stack)
         cf_script.generate()
+    if args.sub_command == 'stage':
+        cf_script = CfScript(args.env, args.stack)
+        cf_script.generate()
+        cf_script.upload()
+    if args.sub_command == 'deploy'
+        cf_script = CfScript(args.env, args.stack)
+        cf_script.generate()
+        cf_script.upload()
+        cf_script.deploy()
