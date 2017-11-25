@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import yaml
-from jinja2 import Environment
 import boto3
 import os
+from jinja2 import Environment
 from subprocess import call
 
 __Author__ = 'Yufei Ren'
@@ -89,6 +89,7 @@ class CfScript:
                     '--template-file', self.output_folder + self.stack_cf_file,
                     '--parameter-overrides',
                     'Env=' + self.env]
+
         print('[' + self.stack + '] parameters: ')
         print('[' + self.stack + '] Env -> ' + self.env)
 
