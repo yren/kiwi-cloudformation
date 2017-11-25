@@ -92,13 +92,12 @@ class CfScript:
 
         print('[' + self.stack + '] parameters: ')
         print('[' + self.stack + '] Env -> ' + self.env)
-
         if 'Parameters' in self.config:
             for key, value in self.config['Parameters'].items():
                 command.append(key + '=' + str(value))
-                print('[' + self.stack + '] key -> ' + str(value))
+                print('[' + self.stack + '] ' + key + ' -> ' + str(value))
 
-        print('[' + self.stack + '] ' + ' '.join(map(str, command))
+        print('[' + self.stack + '] ' + ' '.join(map(str, command)))
         call(command)
 
 
@@ -130,7 +129,8 @@ if __name__ == '__main__':
         cf_script = CfScript(args.env, args.stack)
         cf_script.generate()
         cf_script.upload()
-    if args.sub_command == 'deploy'
+
+    if args.sub_command == 'deploy':
         cf_script = CfScript(args.env, args.stack)
         cf_script.generate()
         cf_script.upload()
