@@ -1,2 +1,13 @@
 ---
+apiecs:
+  template : 'ecs_cluster.yaml.j2'
+  ecsClusterName : 'api-cluster'
+  Parameters:
+    InstanceType : 'c4.xlarge'
+    HostName : 'apiecs'
+    DesiredCapacity : '2'
+    MinSize : '1'
+    MaxSize : '2'
+  VPCZoneIdentifier : [ 'InternalApplicationAZ1a', 'InternalApplicationAZ1b']
+  SecurityGroups : [ 'InternalApplicationSG', 'SSH']
 ...

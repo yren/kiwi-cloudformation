@@ -42,7 +42,7 @@ class CfScript:
                 raise Exception('Invalid stack: [' + self.stack + ']')
 
             self.template_file = 'template/{}'.format(self.config['template'])
-            if self.config['template'].endwith('yaml.j2'):
+            if self.config['template'].endswith('yaml.j2'):
                 self.stack_cf_file = '{}.yaml'.format(stack)
             else:
                 self.stack_cf_file = '{}.json'.format(stack)

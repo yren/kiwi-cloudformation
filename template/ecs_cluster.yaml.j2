@@ -1,0 +1,258 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  {{stack}} - ECS Cluster Definition, ECS Cluster, ASG, Role
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Environment Settings
+      Parameters:
+      - Env
+    - Label:
+        default: Amazon ECS Configuration
+      Parameters:
+      - InstanceType
+      - HostName
+      - MaxSize
+      - DesiredCapacity
+      - MinSize
+    ParameterLabels: {}
+Parameters:
+  Env:
+    Description: Environenmt to deploy.
+    Type: String
+    AllowedValues:
+    - "{{ env }}"
+    Default: "{{ env }}"
+  DesiredCapacity:
+    Type: Number
+    Default: "{{ config.Parameters.DesiredCapacity }}"
+    Description: Number of instances to launch in your ECS cluster.
+  MaxSize:
+    Type: Number
+    Default: "{{ config.Parameters.MaxSize }}"
+    Description: Maximum number of instances that can be launched in your ECS cluster.
+  MinSize:
+    Type: Number
+    Default: "{{ config.Parameters.MinSize }}"
+    Description: Minimum number of instances that can be launched in your ECS cluster.
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: "{{ config.Parameters.InstanceType }}"
+    AllowedValues:
+    - t1.micro
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m1.small
+    - m1.medium
+    - m1.large
+    - m1.xlarge
+    - m2.xlarge
+    - m2.2xlarge
+    - m2.4xlarge
+    - m3.medium
+    - m3.large
+    - m3.xlarge
+    - m3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c1.medium
+    - c1.xlarge
+    - c3.large
+    - c3.xlarge
+    - c3.2xlarge
+    - c3.4xlarge
+    - c3.8xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    - g2.2xlarge
+    - g2.8xlarge
+    - r3.large
+    - r3.xlarge
+    - r3.2xlarge
+    - r3.4xlarge
+    - r3.8xlarge
+    - i2.xlarge
+    - i2.2xlarge
+    - i2.4xlarge
+    - i2.8xlarge
+    - d2.xlarge
+    - d2.2xlarge
+    - d2.4xlarge
+    - d2.8xlarge
+    - hi1.4xlarge
+    - hs1.8xlarge
+    - cr1.8xlarge
+    - cc2.8xlarge
+    - cg1.4xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+  HostName:
+    Default: "{{ config.Parameters.HostName }}"
+    Description: ECS Instance Name
+    Type: String
+Mappings:
+  Fn::Transform:
+    Name: AWS::Include
+    Parameters:
+      Location:
+        Fn::Join:
+        - ''
+        - - s3://
+          - Ref: Env
+          - "-cloudformation-scripts/common_mappings.json"
+Resources:
+  ecscluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: "{{ env }}-{{ config.ecsClusterName }}"
+
+  asg:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier:
+      {% for zone_name in config.VPCZoneIdentifier %}
+      - Fn::ImportValue:
+          Fn::Join:
+          - ''
+          - - Fn::FindInMap:
+              - Env2var
+              - Ref: Env
+              - NetworkStackName
+            - "-{{ zone_name }}"
+      {% endfor %}
+      LaunchConfigurationName:
+        Ref: asglc
+      MinSize:
+        Ref: MinSize
+      MaxSize:
+        Ref: MaxSize
+      DesiredCapacity:
+        Ref: DesiredCapacity
+      Fn::Transform:
+        Name: AWS::Include
+        Parameters:
+          Location:
+            Fn::Join:
+            - ''
+            - - s3://
+              - Ref: Env
+              - "-cloudformation-scripts/common_ins_tags_asg.json"
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+        Count: '1'
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: 'true'
+  asglc:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - Env2var
+        - Ref: Env
+        - ECSImageId
+      SecurityGroups:
+      {% for security_group in config.SecurityGroups %}
+      - Fn::ImportValue:
+          Fn::Join:
+          - ''
+          - - Fn::FindInMap:
+              - Env2var
+              - Ref: Env
+              - NetworkStackName
+            - "-{{ security_group }}"
+      {% endfor %}
+      InstanceType:
+        Ref: InstanceType
+      IamInstanceProfile:
+        Ref: ec2profile
+      KeyName:
+        Fn::FindInMap:
+        - Env2var
+        - Ref: Env
+        - KeyName
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - "#!/bin/bash -xe\n"
+            - "export no_proxy='169.254.169.254'\n"
+            - "export http_proxy=http://saproxy.internal.reuters.com:3128\n"
+            - "export https_proxy=${http_proxy}\n"
+            - "echo ECS_CLUSTER="
+            - Ref: ecscluster
+            - " >> /etc/ecs/ecs.config\n"
+            - "echo ECS_ENABLE_TASK_IAM_ROLE=true >>/etc/ecs/ecs.config\n"
+            - "echo ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true >>/etc/ecs/ecs.config\n"
+            - "/opt/aws/bin/cfn-signal -e $? "
+            - "         --stack "
+            - Ref: AWS::StackName
+            - "         --resource asg "
+            - "         --http-proxy ${http_proxy} "
+            - "         --region "
+            - Ref: AWS::Region
+            - "\n"
+  ec2profile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: ec2role
+  ec2role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: ecs-service
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - ecs:CreateCluster
+            - ecs:DeregisterContainerInstance
+            - ecs:DiscoverPollEndpoint
+            - ecs:Poll
+            - ecs:RegisterContainerInstance
+            - ecs:StartTelemetrySession
+            - ecs:Submit*
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - ecr:GetAuthorizationToken
+            - ecr:BatchCheckLayerAvailability
+            - ecr:GetDownloadUrlForLayer
+            - ecr:GetRepositoryPolicy
+            - ecr:DescribeRepositories
+            - ecr:ListImages
+            - ecr:DescribeImages
+            - ecr:BatchGetImage
+            Resource: "*"
+Outputs:
+  ecscluster:
+    Value:
+      Fn::GetAtt:
+      - ecscluster
+      - Arn
+    Export:
+      Name:
+        Fn::Sub: "{{ env }}-ecs-{{ config.ecsClusterName }}"
+...
