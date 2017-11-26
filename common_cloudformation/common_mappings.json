@@ -1,0 +1,16 @@
+{
+	"Env2var": {
+		"dev": {
+			"KeyName": "",
+			"JumpKeyName" : "",
+			"NetworkStackName": "",
+			"EnvPrefix": "dev",
+			"ELBsStackName": "",
+			"ImageId": "",
+			"ECSImageId": "",
+			"ECSStackName": "",
+			"ECRUrl": "amazonaws.com/",
+			"HostedZoneId": ""
+		}
+	}
+}
