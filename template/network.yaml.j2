@@ -3,23 +3,32 @@
 # CF template from -- {{ config.template }}
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  {{stack}} - AWS Network Config, VPC, SecurityGroup
+  {{stack}} - AWS Network Config, InternetGateway, VPC
 Parameters:
   Env:
-    Description: Environenmt to deploy.
+    Description: environenmt to deploy.
     Type: String
     AllowedValues:
     - "{{ env }}"
     Default: "{{ env }}"
-
-Mappings:
-  Fn::Transform:
-    Name: AWS::Include
-    Parameters:
-      Location:
-        Fn::Join:
-        - ''
-        - - s3://
-          - !Ref Env
-          - "-cloudformation-scripts/common_mappings.json"
+Resources:
+# Internet 网关。创建 Internet 网关后，您可以将它连接到 VPC
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: InternetGateway
+# 利用指定的 CIDR 块创建 Virtual Private Cloud (VPC)
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: 10.0.0.0/16
+  AttachGateway:
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: kiwiVPC
 ...

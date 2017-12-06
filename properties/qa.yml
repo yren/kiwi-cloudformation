@@ -1,7 +1,9 @@
 ---
+network:
+  template: network.yaml.j2
 apiecs:
-  template : 'ecs_cluster.yaml.j2'
-  ecsClusterName : 'api-cluster'
+  template: 'ecs_cluster.yaml.j2'
+  ecsClusterName: 'api-cluster'
   Parameters:
     InstanceType : 'c4.xlarge'
     HostName : 'apiecs'
