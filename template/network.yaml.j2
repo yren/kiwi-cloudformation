@@ -1,0 +1,25 @@
+---
+# Stack name -- {{ stack }}
+# CF template from -- {{ config.template }}
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  {{stack}} - AWS Network Config, VPC, SecurityGroup
+Parameters:
+  Env:
+    Description: Environenmt to deploy.
+    Type: String
+    AllowedValues:
+    - "{{ env }}"
+    Default: "{{ env }}"
+
+Mappings:
+  Fn::Transform:
+    Name: AWS::Include
+    Parameters:
+      Location:
+        Fn::Join:
+        - ''
+        - - s3://
+          - !Ref Env
+          - "-cloudformation-scripts/common_mappings.json"
+...
