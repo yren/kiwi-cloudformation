@@ -49,6 +49,7 @@ class CfScript:
                 self.stack_cf_file = '{}.yaml'.format(stack)
             else:
                 self.stack_cf_file = '{}.json'.format(stack)
+            #print('self:' + str(self.__dict__))
 
             with open(self.template_file) as tf:
                 self.template = Environment().from_string(tf.read())

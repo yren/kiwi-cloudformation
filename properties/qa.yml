@@ -1,6 +1,6 @@
 ---
 network:
-  template: network.yaml.j2
+  template: 'network.yaml.j2'
 apiecs:
   template: 'ecs_cluster.yaml.j2'
   ecsClusterName: 'api-cluster'

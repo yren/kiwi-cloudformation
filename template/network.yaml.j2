@@ -12,23 +12,21 @@ Parameters:
     - "{{ env }}"
     Default: "{{ env }}"
 Resources:
-# Internet 网关。创建 Internet 网关后，您可以将它连接到 VPC
   InternetGateway:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
         - Key: Name
           Value: InternetGateway
-# 利用指定的 CIDR 块创建 Virtual Private Cloud (VPC)
-  VPC:
-    Type: "AWS::EC2::VPC"
-    Properties:
-      CidrBlock: 10.0.0.0/16
-  AttachGateway:
-    Properties:
-      InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: kiwiVPC
+    VPC:
+      Type: "AWS::EC2::VPC"
+      Properties:
+        CidrBlock: 10.0.0.0/16
+    AttachGateway:
+      Properties:
+        InternetGatewayId: !Ref InternetGateway
+        VpcId: !Ref VPC
+        Tags:
+          - Key: Name
+            Value: kiwiVPC
 ...
