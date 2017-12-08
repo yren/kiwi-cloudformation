@@ -1,4 +1,6 @@
 ---
+s3bucket:
+  template: 's3bucket.yaml.j2'
 network:
   template: 'network.yaml.j2'
 apiecs:

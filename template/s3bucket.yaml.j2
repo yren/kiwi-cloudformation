@@ -1,0 +1,20 @@
+---
+# Stack name -- {{stack}}
+# CF template from -- {{config.template}}
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  {{stack}} - AWS S3 bucket
+Parameters:
+  Env:
+    Description: environment to deploy.
+    Type: String
+    AllowedValues:
+      - "{{env}}"
+    Default: "{{env}}"
+Resources:
+  CFS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      AccessControl: Private
+      BucketName: "{{env}}-cloudformation-scripts"
+...
