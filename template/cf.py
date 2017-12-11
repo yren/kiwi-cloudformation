@@ -1,10 +1,10 @@
 #!/usr/bin/env python
+import os
 import argparse
+from subprocess import call
 import yaml
 import boto3
-import os
 from jinja2 import Environment
-from subprocess import call
 
 __Author__ = 'Yufei Ren'
 __Date__ = '2017.11.26'
