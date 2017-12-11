@@ -71,6 +71,9 @@ class CfScript:
         '''
         upload local cloudformation file to s3
         '''
+        if self.stack == "s3bucket":
+            print('stack ' + self.stack + ' no need upload s3')
+            return
         boto3.resource('s3').Object(self.bucket_name, self.stack_cf_file).upload_file(self.output_folder + self.stack_cf_file)
         print('[' + self.stack + '] upload to \nhttps://s3.amazonaws.com/' + self.bucket_name + '/' + self.stack_cf_file)
 
