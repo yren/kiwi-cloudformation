@@ -1,0 +1,26 @@
+---
+Resources:
+  ElasticLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      AvailabilityZones: !GetAZs ''
+      Instances:
+        - !Ref Ec2Instance1
+        - !Ref Ec2Instance2
+      Listeners:
+        - LoadBalancerPort: '80'
+          InstancePort: !Ref WebServerPort
+          Protocol: HTTP
+      HealthCheck:
+        Target: !Join 
+          - ''
+          - - 'HTTP:'
+            - !Ref WebServerPort
+            - /
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+
+#Fn::Join 函数有两个参数，一个是把您想要并置的值分开的分隔符，另一个是按您想要这些值出现的顺序排列的数组。
+...

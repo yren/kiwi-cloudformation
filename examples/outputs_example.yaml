@@ -1,0 +1,21 @@
+---
+Outputs:
+  InstallURL:
+    Value: !Join 
+      - ''
+      - - 'http://'
+        - !GetAtt 
+          - ElasticLoadBalancer
+          - DNSName
+        - /wp-admin/install.php
+    Description: Installation URL of the WordPress website
+  WebsiteURL:
+    Value: !Join 
+      - ''
+      - - 'http://'
+        - !GetAtt 
+          - ElasticLoadBalancer
+          - DNSName
+
+# 每一个输出值都有一个名称，一个包含该返回值声明的值属性被作为输出值，和一个视需要而定的该值的描述。
+...
