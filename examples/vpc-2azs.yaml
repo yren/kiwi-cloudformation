@@ -71,7 +71,7 @@ Resources:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref SubnetAPrivate
-      RouteTableId: !Ref RouteTablePrivate
+      RouteTableId: !Ref RouteTableAPrivate
   RouteTableAssociationBPrivate:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
@@ -174,3 +174,4 @@ Outputs:
     Value: !Ref RouteTableBPrivate
     Export:
       Name: !Sub '${AWS::StackName}-RouteTableBPrivate'
+...
