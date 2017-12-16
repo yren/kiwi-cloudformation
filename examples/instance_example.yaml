@@ -1,8 +1,31 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  'AWS CloudFormation Sample Template, Sample template that can be used to test EC2 updates.'
+  'AWS CloudFormation Sample Template'
 Parameters:
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type.
+Mappings:
 
-
+Resources:
+  WebServerInstance:
+    Type: 'AWS::EC2::Instance'
+    Metadata:
+      Comment: Install a simple PHP application
+      "AWS::CloudFormation::Init":
+        config: 
+          packages:
+            yum: 
+              http: []
+              php: []
+        files:
+          "/var/www/html/index.php": 
+            content:
 ...
