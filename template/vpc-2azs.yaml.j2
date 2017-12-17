@@ -202,7 +202,7 @@ Outputs:
     Value: !Ref RouteTableBPrivate
     Export:
       Name: !Sub '${AWS::StackName}-RouteTableBPrivate'
-  InternalSecurityGroup：
+  InternalSecurityGroup:
     Description: 'group id for Internal SecurityGroup'
     Value: !GetAtt: ['InternalSecurityGroup', 'GroupId']
     Export:
@@ -212,5 +212,4 @@ Outputs:
     Value: !GetAtt: ['ExternalSecurityGroup', 'GroupId']
     Export: 
       Name: !Sub '${AWS::StackName}-ExternalSecurityGroup'
-
 ...
