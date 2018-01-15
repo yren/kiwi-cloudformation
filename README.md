@@ -5,3 +5,8 @@
 
 ## AWS CloudFormation cheatsheet
 * https://github.com/yren/aws-cheatsheet/blob/master/cloudformation_cheatsheet.md
+
+## pip list module
+```
+pip list --format=columns
+```
