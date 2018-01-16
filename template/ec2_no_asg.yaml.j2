@@ -1,0 +1,42 @@
+---
+# Stack name -- {{ stack }}
+# CF template from -- {{ config.template }}
+AWSTemplateFormatVersion: '2010-09-09'
+Description: '{{ stack }} -- ec2 instance, no asg type'
+Parameters:
+  Env:
+    Description: environment to deploy.
+    Type: String
+    AllowedValues:
+      - "{{env}}"
+    Default: "{{env}}"
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: "{{config.Parameters.InstanceType}}"
+  HostName:
+    Description: Server Name
+    Type: String
+    Default: "{{config.Parameters.HostName}}"
+  IAMRole:
+    Description: IAM Role Profile
+    Type: String
+    Default: "{{config.Parameters.IAMRole}}"
+  RootDelOnTerm:
+    Description: Delete On Termination Flag for Root Volume
+    Type: String
+    AllowedValues:
+      - True 
+      - False 
+    Default: "{{config.Parameters.RootDelOnTerm}}"
+  RootVolType:
+    Description: Volume Type
+    Type: String
+    Default: gp2
+  RootVolSize:
+    Description: Volume Size
+    Type: String
+    Default: "{{config.Parameters.RootVolSize}}"
+Mappings:
+      
+...
