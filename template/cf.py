@@ -26,7 +26,7 @@ class CfScript:
         self.stack_cf = ''
         self.env = env
         self.stack = stack
-        self.bucket_name = '{}-cloudformation-scripts'.format(env)
+        self.bucket_name = '{}-kiwi-cloudformation-scripts'.format(env)
         self.output_folder = './output/' # local output folder
         self.common_files_folder = './common_cloudformation/'
 
