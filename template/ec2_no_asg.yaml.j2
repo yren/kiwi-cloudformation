@@ -38,5 +38,15 @@ Parameters:
     Type: String
     Default: "{{config.Parameters.RootVolSize}}"
 Mappings:
+  'Fn::Transform':
+    - Name: 'AWS::Include'
+      Parameters:
+        Location: 
+          !Join
+            - ''
+            - - 's3://'
+              - !Ref Env
+              - '-kiwi-cloudformation-scripts/common_mappings.json'
+                    
       
 ...
