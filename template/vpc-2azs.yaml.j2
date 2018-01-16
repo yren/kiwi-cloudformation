@@ -134,7 +134,11 @@ Resources:
     Properties:
       GroupDescription: External Application SecurityGroup
       VpcId: !Ref VPC
-      SecurityGroupIngress: []
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 0
+          CidrIp: !Sub '10.${ClassB}.0.0/16'
       SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: 0
