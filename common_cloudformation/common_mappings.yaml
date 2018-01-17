@@ -1,0 +1,4 @@
+Env2var:
+  dev:
+    ImageId: ami-cb9ec1b1
+    JumpKeyName: renyufei2018

@@ -46,13 +46,14 @@ Mappings:
             - ''
             - - 's3://'
               - !Ref Env
-              - '-kiwi-cloudformation-scripts/common_mappings.json'
+              - '-kiwi-cloudformation-scripts/common_mappings.yaml'
 Resources:
   ServerInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      ImageId: 
+      ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
+      
     
                     
       
