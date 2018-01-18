@@ -26,8 +26,8 @@ Parameters:
     Description: Delete On Termination Flag for Root Volume
     Type: String
     AllowedValues:
-      - True 
-      - False 
+      - true
+      - false 
     Default: "{{config.Parameters.RootDelOnTerm}}"
   RootVolType:
     Description: Volume Type
@@ -41,7 +41,7 @@ Mappings:
   Fn::Transform:
     - Name: 'AWS::Include'
       Parameters:
-        Location: 
+        Location:
           !Join
             - ''
             - - 's3://'
@@ -58,6 +58,43 @@ Resources:
           {%- for security_group in config.GroupSet %}
           - !ImportValue: {{ security_group }}
           {%- endfor %}
+      AssociatePublicIpAddress: false
+      DeviceIndex: 0
+      DeleteOnTermination: true
+      SubnetId: !ImportValue: {{ config.SubnetId }}
+      KeyName: !FindInMap [Env2var, !Ref Env, KeyName]
+      Fn::Transform:
+        - Name: 'AWS::Include'
+          Parameters:
+            Location:
+              !Join
+                - ''
+                - - 's3://'
+                  - !Ref Env
+                  - '-kiwi-cloudformation-scripts/common_userdata_no_asg.yaml'
+        - Name: 'AWS::Include'
+          Parameters:
+            Location:
+              !Join
+                - ''
+                - - 's3://'
+                  - !Ref Env
+                  - '-kiwi-cloudformation-scripts/common_ins_tags_no_asg.yaml'
+      BlockDeviceMappings:
+        DeviceName: /dev/xvda
+        Ebs:
+          DeleteOnTermination: !Ref RootDelOnTerm
+          VolumeSize: !Ref RootVolSize
+          VolumeType: !Ref RootVolType
+      IamInstanceProfile: !Ref IAMRole
+      CreationPolicy:
+        ResourceSignal:
+          Timeout: PT15M
+        
+        
+        
+        
+        
     
                     
       
