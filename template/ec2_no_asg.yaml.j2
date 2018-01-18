@@ -53,7 +53,11 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
-      
+      NetworkInterfaces:
+        GroupSet:
+          {%- for security_group in config.GroupSet %}
+          - !ImportValue: {{ security_group }}
+          {%- endfor %}
     
                     
       

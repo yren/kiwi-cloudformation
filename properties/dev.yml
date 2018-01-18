@@ -5,6 +5,10 @@ vpc2azs:
     ClassB: 36
 s3bucket:
   template: 's3bucket.yaml.j2'
+saproxy:
+  template: 'ec2_no_asg.yaml.j2'
+  Parameters:
+  SecurityGroups: ['ExternalSecurityGroup']
 apiecs:
   template: 'ecs_cluster.yaml.j2'
   ecsClusterName: 'api-cluster'
