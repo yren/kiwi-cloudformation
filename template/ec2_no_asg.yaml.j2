@@ -56,12 +56,12 @@ Resources:
       NetworkInterfaces:
         GroupSet:
           {%- for security_group in config.SecurityGroups %}
-          - !ImportValue: '{{ security_group }}'
+          - !ImportValue '{{ security_group }}'
           {%- endfor %}
       AssociatePublicIpAddress: false
       DeviceIndex: 0
       DeleteOnTermination: true
-      SubnetId: !ImportValue: '{{ config.SubnetId }}'
+      SubnetId: !ImportValue '{{ config.SubnetId }}'
       KeyName: !FindInMap [Env2var, !Ref Env, KeyName]
       Fn::Transform:
         - Name: 'AWS::Include'
