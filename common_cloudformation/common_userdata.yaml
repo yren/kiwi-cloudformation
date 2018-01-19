@@ -1,0 +1,15 @@
+UserData:
+  !Base64:
+    !Join
+      - ""
+      - - "#!/bin/bash -xe\n"
+        - "export http_proxy=http://saproxy.internal.reuters.com:3128\n"
+        - "export https_proxy=${http_proxy}\n"
+        - "export no_proxy='169.254.169.254,localhost,127.0.0.1'\n"
+        - "aws_api_ver='2016-09-02'\n"
+        - "aws configure set default.s3.signature_version s3v4\n"
+        - "exec &> >(tee /var/log/userdata.log)\n"
+        - "instanceid=$(curl -s http://169.254.169.254/${aws_api_ver}/meta-data/instance-id)\n"
+        - "region=$(curl -s http://169.254.169.254/${aws_api_ver}/dynamic/instance-identity/document|grep region|cut -f4 -d\"\\\"\")\n"
+        - "stack_name=!Ref 'AWS::StackName'\n"
+        - "echo Stack name is ${stack_name}\n"
