@@ -55,7 +55,7 @@ Resources:
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       NetworkInterfaces:
         GroupSet:
-          {%- for security_group in config.GroupSet %}
+          {%- for security_group in config.SecurityGroups %}
           - !ImportValue: {{ security_group }}
           {%- endfor %}
       AssociatePublicIpAddress: false
@@ -79,7 +79,7 @@ Resources:
                 - ''
                 - - 's3://'
                   - !Ref Env
-                  - '-kiwi-cloudformation-scripts/common_ins_tags_no_asg.yaml'
+                  - '-kiwi-cloudformation-scripts/common_tags_no_asg.yaml'
       BlockDeviceMappings:
         DeviceName: /dev/xvda
         Ebs:

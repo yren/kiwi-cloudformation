@@ -8,7 +8,13 @@ s3bucket:
 saproxy:
   template: 'ec2_no_asg.yaml.j2'
   Parameters:
-  SecurityGroups: ['ExternalSecurityGroup']
+    InstanceType: t2.micro
+    HostName: saproxy
+    IAMRole:
+    RootDelOnTerm: true
+    RootVolSize: 20
+  SecurityGroups: ['devvpc2azs-ExternalSecurityGroup']
+  SubnetId: devvpc2azs-SubnetAPrivate
 apiecs:
   template: 'ecs_cluster.yaml.j2'
   ecsClusterName: 'api-cluster'
