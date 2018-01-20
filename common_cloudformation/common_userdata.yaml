@@ -1,6 +1,6 @@
 UserData:
   !Base64:
-    !Join
+    !Join:
       - ""
       - - "#!/bin/bash -xe\n"
         - "export http_proxy=http://saproxy.internal.reuters.com:3128\n"
