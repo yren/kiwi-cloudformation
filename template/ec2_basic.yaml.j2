@@ -2,7 +2,7 @@
 # Stack name -- {{ stack }}
 # CF template from -- {{ config.template }}
 AWSTemplateFormatVersion: '2010-09-09'
-Description: '{{ stack }} -- ec2 instance, no asg type'
+Description: '{{ stack }} -- ec2 basic instance'
 Parameters:
   Env:
     Description: environment to deploy.
@@ -14,6 +14,26 @@ Parameters:
     Description: EC2 instance type
     Type: String
     Default: '{{config.Parameters.InstanceType}}'
+  HostName:
+    Description: Server Name
+    Type: String
+    Default: "{{config.Parameters.HostName}}"
+  IAMRole:
+    Description: IAM Role Profile
+    Type: String
+    Default: "{{config.Parameters.IAMRole}}"
+  RootDelOnTerm:
+    Description: Delete On Termination Flag for Root Volume
+    Type: String
+    Default: "{{config.Parameters.RootDelOnTerm}}"
+  RootVolType:
+    Description: Volume Type
+    Type: String
+    Default: gp2
+  RootVolSize:
+    Description: Volume Size
+    Type: String
+    Default: "{{config.Parameters.RootVolSize}}"
 Mappings:
   Fn::Transform:
     - Name: 'AWS::Include'
@@ -32,6 +52,8 @@ Resources:
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
       SecurityGroupIds:
-        - sg-4c266b38
-      SubnetId: subnet-59a78412
+        {%- for security_group in config.SecurityGroups %}
+        - !ImportValue '{{ security_group }}'
+        {%- endfor %}
+      SubnetId: !ImportValue '{{ config.Subnet }}'
 ...
