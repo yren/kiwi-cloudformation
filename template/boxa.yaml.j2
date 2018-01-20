@@ -1,0 +1,37 @@
+---
+# Stack name -- {{ stack }}
+# CF template from -- {{ config.template }}
+AWSTemplateFormatVersion: '2010-09-09'
+Description: '{{ stack }} -- ec2 instance, no asg type'
+Parameters:
+  Env:
+    Description: environment to deploy.
+    Type: String
+    AllowedValues:
+      - '{{env}}'
+    Default: '{{env}}'
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: '{{config.Parameters.InstanceType}}'
+Mappings:
+  Fn::Transform:
+    - Name: 'AWS::Include'
+      Parameters:
+        Location:
+          Fn::Join:
+            - ''
+            - - 's3://'
+              - !Ref Env
+              - '-kiwi-cloudformation-scripts/common_mappings.yaml'
+Resources:  
+  WebInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
+      KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
+      SecurityGroupIds:
+        - sg-4c266b38
+      SubnetId: subnet-59a78412
+...
