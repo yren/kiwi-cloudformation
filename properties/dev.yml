@@ -15,7 +15,7 @@ saproxy:
     RootVolSize: 20
   SecurityGroups: ['devvpc2azs-ExternalSecurityGroup']
   SubnetId: devvpc2azs-SubnetAPrivate
-saproxy:
+boxa:
   template: 'boxa.yaml.j2'
   Parameters:
     InstanceType: t2.micro
