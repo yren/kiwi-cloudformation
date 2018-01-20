@@ -78,11 +78,11 @@ Resources:
                   - !Ref Env
                   - '-kiwi-cloudformation-scripts/common_tags_no_asg1.yaml'
       BlockDeviceMappings:
-        DeviceName: /dev/xvda
-        Ebs:
-          DeleteOnTermination: !Ref RootDelOnTerm
-          VolumeSize: !Ref RootVolSize
-          VolumeType: !Ref RootVolType
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: !Ref RootDelOnTerm
+            VolumeSize: !Ref RootVolSize
+            VolumeType: !Ref RootVolType
       IamInstanceProfile: !Ref IAMRole
     CreationPolicy:
       ResourceSignal:
