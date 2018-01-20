@@ -59,7 +59,7 @@ Resources:
       DeviceIndex: 0
       DeleteOnTermination: true
       SubnetId: !ImportValue '{{ config.SubnetId }}'
-      KeyName: !FindInMap [Env2var, !Ref Env, KeyName]
+      KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
       Fn::Transform:
         - Name: 'AWS::Include'
           Parameters:
