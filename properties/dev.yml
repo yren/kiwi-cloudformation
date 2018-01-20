@@ -10,7 +10,7 @@ saproxy:
   Parameters:
     InstanceType: t2.micro
     HostName: saproxy
-    IAMRole:
+    IAMRole: jump
     RootDelOnTerm: true
     RootVolSize: 20
   SecurityGroups: ['devvpc2azs-ExternalSecurityGroup']
