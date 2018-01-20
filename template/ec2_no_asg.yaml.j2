@@ -51,11 +51,12 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       NetworkInterfaces:
-        GroupSet:
-          {%- for security_group in config.SecurityGroups %}
-          - !ImportValue '{{ security_group }}'
-          {%- endfor %}
-      AssociatePublicIpAddress: false
+        - GroupSet:
+            {%- for security_group in config.SecurityGroups %}
+            - !ImportValue '{{ security_group }}'
+            {%- endfor %}
+          AssociatePublicIpAddress: false
+          DeviceIndex: 0
       DeleteOnTermination: true
       SubnetId: !ImportValue '{{ config.SubnetId }}'
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
