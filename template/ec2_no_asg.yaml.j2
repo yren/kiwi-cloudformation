@@ -84,9 +84,9 @@ Resources:
           VolumeSize: !Ref RootVolSize
           VolumeType: !Ref RootVolType
       IamInstanceProfile: !Ref IAMRole
-      CreationPolicy:
-        ResourceSignal:
-          Timeout: PT15M
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
         
         
         
