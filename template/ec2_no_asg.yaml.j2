@@ -56,7 +56,6 @@ Resources:
           - !ImportValue '{{ security_group }}'
           {%- endfor %}
       AssociatePublicIpAddress: false
-      DeviceIndex: 0
       DeleteOnTermination: true
       SubnetId: !ImportValue '{{ config.SubnetId }}'
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
