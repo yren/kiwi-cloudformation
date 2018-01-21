@@ -63,4 +63,12 @@ Resources:
                 - - 's3://'
                   - !Ref Env
                   - '-kiwi-cloudformation-scripts/common_tags_no_asg.yaml'
+      IamInstanceProfile: !Ref IAMRole
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: !Ref RootDelOnTerm
+            VolumeSize: !Ref RootVolSize
+            VolumeType: !Ref RootVolType
+      
 ...
