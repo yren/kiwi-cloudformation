@@ -1,5 +1,7 @@
 Tags:
-  - Key: Name
+  - 
+    Key: Name
     Value: box
-  - Key: Environment
+  - 
+    Key: Environment
     Value: !Ref Env
