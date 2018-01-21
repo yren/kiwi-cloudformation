@@ -1,3 +1,5 @@
 Tags:
   - Key: Name
     Value: box
+  - Key: box_type
+    Value: boxtype
