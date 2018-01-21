@@ -1,7 +1,7 @@
 Tags:
   - Key: Name
-    Value: box
-  - Key: box_type
-    Value: boxtype
+    Value: "!Join ['_', [!Ref Env, !Ref HostName]]"
   - Key: Environment
-    Value: '!Ref Env'
+    Value: "!Ref Env"
+  - Key: box_type
+    Value: "!Join ['_', [!Ref Env, !Ref HostName]]"
