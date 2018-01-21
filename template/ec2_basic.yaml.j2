@@ -54,4 +54,13 @@ Resources:
         - !ImportValue '{{ security_group }}'
         {%- endfor %}
       SubnetId: !ImportValue '{{ config.Subnet }}'
+      Fn::Transform:
+        - Name: 'AWS::Include'
+          Parameters:
+            Location:
+              Fn::Join:
+                - ''
+                - - 's3://'
+                  - !Ref Env
+                  - '-kiwi-cloudformation-scripts/common_tags_no_asg.yaml'
 ...

@@ -5,5 +5,3 @@ Tags:
     Value: !Ref Env
   - Key: box_type
     Value: !Join ['_', [!Ref Env, !Ref HostName]]
-  
-      
