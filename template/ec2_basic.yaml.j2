@@ -43,7 +43,7 @@ Mappings:
               - !Ref Env
               - '-kiwi-cloudformation-scripts/common_mappings.yaml'
 Resources:  
-  WebInstance:
+  ServerInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
