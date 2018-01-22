@@ -63,6 +63,15 @@ Resources:
                 - - 's3://'
                   - !Ref Env
                   - '-kiwi-cloudformation-scripts/common_tags_no_asg.yaml'
+      Fn::Transform:
+        - Name: 'AWS::Include'
+          Parameters:
+            Location:
+              Fn::Join:
+                - ''
+                - - 's3://'
+                  - !Ref Env
+                  - '-kiwi-cloudformation-scripts/common_userdata.yaml'
       IamInstanceProfile: !Ref IAMRole
       BlockDeviceMappings:
         - DeviceName: /dev/xvda

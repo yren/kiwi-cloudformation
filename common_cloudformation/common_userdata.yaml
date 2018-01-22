@@ -12,4 +12,3 @@ UserData:
      region=$(curl -s http://169.254.169.254/${aws_api_ver}/dynamic/instance-identity/document|grep region|cut -f4 -d"\"")
      stack_name= Ref: 'AWS::StackName'
      echo Stack name is ${stack_name}
-     
