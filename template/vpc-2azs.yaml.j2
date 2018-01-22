@@ -231,4 +231,9 @@ Outputs:
     Value: !GetAtt 'ExternalSecurityGroup.GroupId'
     Export: 
       Name: !Sub '${AWS::StackName}-ExternalSecurityGroup'
+  SSHSecurityGroup:
+    Description: 'group id for SSH SecurityGroup'
+    Value: !GetAtt 'SSHSecurityGroup.GroupId'
+    Export: 
+      Name: !Sub '${AWS::StackName}-SSHSecurityGroup'
 ...

@@ -15,14 +15,14 @@ saproxy:
     RootVolSize: 20
   SecurityGroups: ['devvpc2azs-ExternalSecurityGroup']
   Subnet: devvpc2azs-SubnetAPrivate
-ec2basic:
+jumpbox:
   template: 'ec2_basic.yaml.j2'
   Parameters:
     InstanceType: t2.micro
-    HostName: ec2basic
+    HostName: jumpbox
     IAMRole: jump
     RootDelOnTerm: true
     RootVolSize: 20
-  SecurityGroups: ['devvpc2azs-ExternalSecurityGroup']
+  SecurityGroups: ['devvpc2azs-ExternalSecurityGroup', 'devvpc2azs-SSHSecurityGroup']
   Subnet: devvpc2azs-SubnetAPrivate
 ...
