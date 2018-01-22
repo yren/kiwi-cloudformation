@@ -49,6 +49,15 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
+      Fn::Transform:
+        - Name: 'AWS::Include'
+          Parameters:
+            Location:
+              Fn::Join:
+                - ''
+                - - 's3://'
+                  - !Ref Env
+                  - '-kiwi-cloudformation-scripts/common_userdata.yaml'
       SecurityGroupIds:
         {%- for security_group in config.SecurityGroups %}
         - !ImportValue '{{ security_group }}'
@@ -63,15 +72,6 @@ Resources:
                 - - 's3://'
                   - !Ref Env
                   - '-kiwi-cloudformation-scripts/common_tags_no_asg.yaml'
-      Fn::Transform:
-        - Name: 'AWS::Include'
-          Parameters:
-            Location:
-              Fn::Join:
-                - ''
-                - - 's3://'
-                  - !Ref Env
-                  - '-kiwi-cloudformation-scripts/common_userdata.yaml'
       IamInstanceProfile: !Ref IAMRole
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
