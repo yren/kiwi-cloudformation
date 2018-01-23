@@ -95,7 +95,7 @@ Resources:
     Type: 'AWS::EC2::SubnetNetworkAclAssociation'
     Properties:
       SubnetId: !Ref SubnetBPrivate
-      NetworkAclId: !Ref NetworkAclPrivate
+      NetworkAclId: !Ref NetworkBclPrivate
   NetworkAclEntryInPrivateAllowVPC:
     Type: 'AWS::EC2::NetworkAclEntry'
     Properties:
