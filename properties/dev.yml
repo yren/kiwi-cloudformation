@@ -3,6 +3,10 @@ vpc2azs:
   template: vpc-2azs.yaml.j2
   Parameters:
     ClassB: 35
+vpc2azs2:
+  template: vpc-2azs2.yaml.j2
+  Parameters:
+    ClassB: 33
 s3bucket:
   template: 's3bucket.yaml.j2'
 saproxy:
