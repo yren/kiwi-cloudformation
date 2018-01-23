@@ -37,7 +37,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Select [0, !GetAZs '']
-      CidrBlock: !Sub '10.${ClassB}.16.0/20'
+      CidrBlock: !Sub '10.${ClassB}.16.0/24'
       VpcId: !Ref VPC
       Tags:
       - Key: Name
@@ -48,7 +48,7 @@ Resources:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Select [1, !GetAZs '']
-      CidrBlock: !Sub '10.${ClassB}.48.0/20'
+      CidrBlock: !Sub '10.${ClassB}.48.0/24'
       VpcId: !Ref VPC
       Tags:
       - Key: Name
@@ -95,7 +95,7 @@ Resources:
     Type: 'AWS::EC2::SubnetNetworkAclAssociation'
     Properties:
       SubnetId: !Ref SubnetBPrivate
-      NetworkAclId: !Ref NetworkBclPrivate
+      NetworkAclId: !Ref NetworkAclPrivate
   NetworkAclEntryInPrivateAllowVPC:
     Type: 'AWS::EC2::NetworkAclEntry'
     Properties:
