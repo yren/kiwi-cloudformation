@@ -49,20 +49,8 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
-      Fn::Transform:
-        - Name: 'AWS::Include'
-          Parameters:
-            Location:
-              Fn::Join:
-                - ''
-                - - 's3://'
-                  - !Ref Env
-                  - '-kiwi-cloudformation-scripts/common_userdata.yaml'
-      SecurityGroupIds:
-        {%- for security_group in config.SecurityGroups %}
-        - !ImportValue '{{ security_group }}'
-        {%- endfor %}
-      SubnetId: !ImportValue '{{ config.Subnet }}'
+      SecurityGroupIds: sg-af03f6d8
+      SubnetId: subnet-1954757d
       Fn::Transform:
         - Name: 'AWS::Include'
           Parameters:
@@ -79,5 +67,4 @@ Resources:
             DeleteOnTermination: !Ref RootDelOnTerm
             VolumeSize: !Ref RootVolSize
             VolumeType: !Ref RootVolType
-      
 ...
