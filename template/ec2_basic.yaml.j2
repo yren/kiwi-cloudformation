@@ -49,7 +49,8 @@ Resources:
       InstanceType: !Ref InstanceType
       ImageId: !FindInMap [Env2var, !Ref Env, ImageId]
       KeyName: !FindInMap [Env2var, !Ref Env, JumpKeyName]
-      SecurityGroupIds: sg-af03f6d8
+      SecurityGroupIds: 
+        - sg-af03f6d8
       SubnetId: subnet-1954757d
       Fn::Transform:
         - Name: 'AWS::Include'
