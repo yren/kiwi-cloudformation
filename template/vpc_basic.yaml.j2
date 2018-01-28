@@ -2,7 +2,7 @@
 # Stack name -- {{ stack }}
 # CF template from -- {{ config.template }}
 AWSTemplateFormatVersion: '2010-09-09'
-Description: '{{ stack }} -- VPC: 2 private subnets in two availability zones, SecurityGroup'
+Description: '{{ stack }} -- VPC: basic vpc stack'
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -54,8 +54,8 @@ Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: "SSH SecutiryGroup"
-      GroupDescription: "SSH traffic in, all traffic out."
+      GroupName: 'SSH SecutiryGroup'
+      GroupDescription: 'SSH traffic in, all traffic out.'
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -65,5 +65,13 @@ Resources:
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
-  
+Outputs:
+  StackName:
+    Description: 'Stack name'
+    Value: !Sub '${AWS::StackName}'
+  AZs:
+    Description: 'AZs'
+    Value: 2
+    Export:
+      Name: !Sub '${AWS::StackName}-AZs'
   
