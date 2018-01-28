@@ -55,74 +55,41 @@ Resources:
         Value: 'B private'
       - Key: Reach
         Value: private
-  RouteTableAPrivate:
+  RouteTablePrivate:
     Type: 'AWS::EC2::RouteTable'
     Properties:
       VpcId: !Ref VPC
-      Tags:
-      - Key: Name
-        Value: 'A Private'
-  RouteTableBPrivate:
-    Type: 'AWS::EC2::RouteTable'
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
     Properties:
-      VpcId: !Ref VPC
-      Tags:
-      - Key: Name
-        Value: 'B Private'
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTablePrivate
   RouteTableAssociationAPrivate:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref SubnetAPrivate
-      RouteTableId: !Ref RouteTableAPrivate
+      RouteTableId: !Ref RouteTablePrivate
   RouteTableAssociationBPrivate:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       SubnetId: !Ref SubnetBPrivate
-      RouteTableId: !Ref RouteTableBPrivate
-  InternalSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Internal Application SecurityGroup
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: 0
-          ToPort: 0
-          CidrIp: !Sub '10.${ClassB}.0.0/16'
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: 0
-          ToPort: 0
-          CidrIp: !Sub '10.${ClassB}.0.0/16'
+      RouteTableId: !Ref RouteTablePrivate
   ExternalSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: External Application SecurityGroup
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: 0
-          ToPort: 0
-          CidrIp: !Sub '10.${ClassB}.0.0/16'
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: 0
           ToPort: 0
-          CidrIp: '0.0.0.0/0'
-  SSHSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: SSH SecurityGroup
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: '0.0.0.0/0'
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
           CidrIp: '0.0.0.0/0'
 Outputs:
   TemplateID:
@@ -161,31 +128,21 @@ Outputs:
     Value: !Join [',', [!Ref SubnetAPrivate, !Ref SubnetBPrivate]]
     Export:
       Name: !Sub '${AWS::StackName}-SubnetsPrivate'
-  RouteTablesPrivate:
-    Description: 'Route tables private.'
-    Value: !Join [',', [!Ref RouteTableAPrivate, !Ref RouteTableBPrivate]]
-    Export:
-      Name: !Sub '${AWS::StackName}-RouteTablesPrivate'
   SubnetAPrivate:
     Description: 'Subnet A private.'
     Value: !Ref SubnetAPrivate
     Export:
       Name: !Sub '${AWS::StackName}-SubnetAPrivate'
-  RouteTableAPrivate:
-    Description: 'Route table A private.'
-    Value: !Ref RouteTableAPrivate
+  RouteTablePrivate:
+    Description: 'Route table private.'
+    Value: !Ref RouteTablePrivate
     Export:
-      Name: !Sub '${AWS::StackName}-RouteTableAPrivate'
+      Name: !Sub '${AWS::StackName}-RouteTablePrivate'
   SubnetBPrivate:
     Description: 'Subnet B private.'
     Value: !Ref SubnetBPrivate
     Export:
       Name: !Sub '${AWS::StackName}-SubnetBPrivate'
-  RouteTableBPrivate:
-    Description: 'Route table B private.'
-    Value: !Ref RouteTableBPrivate
-    Export:
-      Name: !Sub '${AWS::StackName}-RouteTableBPrivate'
   InternalSecurityGroup:
     Description: 'group id for Internal SecurityGroup'
     Value: !GetAtt 'InternalSecurityGroup.GroupId'
@@ -196,9 +153,4 @@ Outputs:
     Value: !GetAtt 'ExternalSecurityGroup.GroupId'
     Export: 
       Name: !Sub '${AWS::StackName}-ExternalSecurityGroup'
-  SSHSecurityGroup:
-    Description: 'group id for SSH SecurityGroup'
-    Value: !GetAtt 'SSHSecurityGroup.GroupId'
-    Export: 
-      Name: !Sub '${AWS::StackName}-SSHSecurityGroup'
 ...
